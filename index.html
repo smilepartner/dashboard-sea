@@ -298,6 +298,7 @@
     <button class="nav-tab active" data-view="global">Vue globale</button>
     <button class="nav-tab" data-view="commercial">Par commercial</button>
     <button class="nav-tab" data-view="comparatif">Comparatif</button>
+    <button class="nav-tab" data-view="leads">Leads par statut</button>
 </nav>
 
 <div id="view-global">
@@ -411,6 +412,47 @@
     </div>
 </div><!-- /view-comparatif -->
 
+<div id="view-leads" style="display:none">
+    <div class="period-indicator" id="leadsPeriodLabel"></div>
+
+    <div class="section">
+        <div class="section-title">Répartition de l'équipe — Volume leads par commercial</div>
+        <div class="chart-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1rem">
+            <div class="comm-chart-card" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem">
+                <div class="comm-chart-title" style="font-weight:600;margin-bottom:.8rem;color:var(--accent)">SEA</div>
+                <div style="position:relative;height:320px"><canvas id="leadsPieSea"></canvas></div>
+            </div>
+            <div class="comm-chart-card" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem">
+                <div class="comm-chart-title" style="font-weight:600;margin-bottom:.8rem;color:var(--accent)">Ads Réseaux Sociaux</div>
+                <div style="position:relative;height:320px"><canvas id="leadsPieRs"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Répartition de l'équipe — Volume leads par statut</div>
+        <div class="chart-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1rem">
+            <div class="comm-chart-card" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem">
+                <div class="comm-chart-title" style="font-weight:600;margin-bottom:.8rem;color:var(--accent)">SEA</div>
+                <div style="position:relative;height:320px"><canvas id="leadsPieStatutSea"></canvas></div>
+            </div>
+            <div class="comm-chart-card" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem">
+                <div class="comm-chart-title" style="font-weight:600;margin-bottom:.8rem;color:var(--accent)">Ads Réseaux Sociaux</div>
+                <div style="position:relative;height:320px"><canvas id="leadsPieStatutRs"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">SEA — Répartition leads par statut × commercial</div>
+        <div class="table-wrapper" id="leadsTableSea" style="margin-top:1rem"></div>
+    </div>
+    <div class="section">
+        <div class="section-title">Ads Réseaux Sociaux — Répartition leads par statut × commercial</div>
+        <div class="table-wrapper" id="leadsTableRs" style="margin-top:1rem"></div>
+    </div>
+</div><!-- /view-leads -->
+
 <footer>
     Dashboard Ads — SmilePartner &bull; Source : EXPORT.xlsx &bull; Données au 29 mai 2026 &bull; Année fiscale : Juillet – Juin
 </footer>
@@ -502,7 +544,7 @@ const DS = {
 const SALES_DS = {
     PL: {
         name: 'Paul',
-        ratVentesTotal: {an1:2, an2:2},
+        ratVentesTotal: {an1:2, an2:3},
         an1: [
             [399.96, 11, 0, 36.36, 0, 7999.27, 0, 0, null, -1, 7999.27, 0.614],
             [353.77, 11, 1, 32.16, 0.0909, 7075.39, 12490, 2498, 12490, 6.0611, -5414.61, -0.4156],
@@ -528,7 +570,7 @@ const SALES_DS = {
             [439.66, 9, 0, 48.85, 0, 8793.29, 0, 0, null, -1, 8793.29, 0.5537],
             [243.67, 8, 0, 30.46, 0, 4873.32, 0, 0, null, -1, 4873.32, 0.3068],
             [649.33, 17, 0, 38.2, 0, 12986.64, 0, 0, null, -1, 12986.64, 0.8177],
-            null,
+            [593.48, 13, 0, 45.65, 0, 11869.57, 0, 0, null, -1, 11869.57, 0.7474],
             null
         ]
     },
@@ -560,7 +602,7 @@ const SALES_DS = {
             [439.66, 9, 0, 48.85, 0, 8793.29, 0, 0, null, -1, 8793.29, 0.4958],
             [731, 24, 2, 30.46, 0.0833, 14619.95, 37385, 7477, 18692.5, 9.2285, -22765.05, -1.2836],
             [649.33, 17, 0, 38.2, 0, 12986.64, 0, 0, null, -1, 12986.64, 0.7323],
-            null,
+            [684.78, 15, 0, 45.65, 0, 13695.65, 0, 0, null, -1, 13695.65, 0.7722],
             null
         ]
     },
@@ -592,7 +634,7 @@ const SALES_DS = {
             [293.11, 6, 0, 48.85, 0, 5862.19, 0, 0, null, -1, 5862.19, 0.2749],
             [243.67, 8, 0, 30.46, 0, 4873.32, 0, 0, null, -1, 4873.32, 0.2285],
             [534.74, 14, 0, 38.2, 0, 10694.88, 0, 0, null, -1, 10694.88, 0.5015],
-            null,
+            [456.52, 10, 0, 45.65, 0, 9130.43, 0, 0, null, -1, 9130.43, 0.4282],
             null
         ]
     },
@@ -624,7 +666,7 @@ const SALES_DS = {
             [586.22, 12, 0, 48.85, 0, 11724.39, 0, 0, null, -1, 11724.39, 0.9596],
             [578.71, 19, 0, 30.46, 0, 11574.12, 0, 0, null, -1, 11574.12, 0.9473],
             [611.14, 16, 0, 38.2, 0, 12222.72, 0, 0, null, -1, 12222.72, 1.0004],
-            null,
+            [273.91, 6, 0, 45.65, 0, 5478.26, 0, 0, null, -1, 5478.26, 0.4484],
             null
         ]
     },
@@ -656,7 +698,7 @@ const SALES_DS = {
             [879.33, 18, 0, 48.85, 0, 17586.58, 0, 0, null, -1, 17586.58, 1.1073],
             [456.87, 15, 0, 30.46, 0, 9137.47, 0, 0, null, -1, 9137.47, 0.5753],
             [190.98, 5, 0, 38.2, 0, 3819.6, 0, 0, null, -1, 3819.6, 0.2405],
-            null,
+            [182.61, 4, 0, 45.65, 0, 3652.17, 0, 0, null, -1, 3652.17, 0.23],
             null
         ]
     },
@@ -688,9 +730,84 @@ const SALES_DS = {
             [97.7, 2, 0, 48.85, 0, 1954.06, 0, 0, null, -1, 1954.06, 0.0851],
             [365.5, 12, 0, 30.46, 0, 7309.97, 0, 0, null, -1, 7309.97, 0.3182],
             [381.96, 10, 0, 38.2, 0, 7639.2, 0, 0, null, -1, 7639.2, 0.3326],
-            null,
+            [502.17, 11, 0, 45.65, 0, 10043.48, 0, 0, null, -1, 10043.48, 0.4372],
             null
         ]
+    },
+    AV: {
+        name: 'Ayane',
+        ratVentesTotal: {an1:0, an2:1},
+        an1: [
+            [0, 0, 0, null, null, 0, 0, 0, null, null, 0, null],
+            [0, 0, 0, null, null, 0, 0, 0, null, null, 0, null],
+            [0, 0, 0, null, null, 0, 0, 0, null, null, 0, null],
+            [0, 0, 0, null, null, 0, 0, 0, null, null, 0, null],
+            [0, 0, 0, null, null, 0, 0, 0, null, null, 0, null],
+            [0, 0, 0, null, null, 0, 0, 0, null, null, 0, null],
+            [0, 0, 0, null, null, 0, 0, 0, null, null, 0, null],
+            [0, 0, 0, null, null, 0, 0, 0, null, null, 0, null],
+            [0, 0, 0, null, null, 0, 0, 0, null, null, 0, null],
+            [0, 0, 0, null, null, 0, 0, 0, null, null, 0, null],
+            [0, 0, 0, null, null, 0, 0, 0, null, null, 0, null],
+            [0, 0, 0, null, null, 0, 0, 0, null, null, 0, null],
+        ],
+        an2: [
+            [25.74, 1, 0, 25.74, 0, 514.72, 0, 0, null, -1, 514.72, 0.0324],
+            [0, 0, 0, null, null, 0, 0, 0, null, null, 0, 0],
+            [0, 0, 0, null, null, 0, 0, 0, null, null, 0, 0],
+            [48.51, 1, 0, 48.51, 0, 970.2, 0, 0, null, -1, 970.2, 0.0611],
+            [0, 0, 0, null, null, 0, 0, 0, null, null, 0, 0],
+            [0, 0, 0, null, null, 0, 0, 0, null, null, 0, 0],
+            [0, 0, 0, null, null, 0, 0, 0, null, null, 0, 0],
+            [0, 0, 0, null, null, 0, 0, 0, null, null, 0, 0],
+            [0, 0, 0, null, null, 0, 0, 0, null, null, 0, 0],
+            [38.2, 1, 0, 38.2, 0, 763.92, 0, 0, null, -1, 763.92, 0.0481],
+            [365.22, 8, 0, 45.65, 0, 7304.35, 0, 0, null, -1, 7304.35, 0.4599],
+            null
+        ]
+    },
+};
+
+// ── LEADS PAR STATUT (2026) ─────────────────────────────────────────────
+// Format : LEADS_DS.sea[statut][CODE_COM] = nombre de leads
+//          LEADS_DS.rs[statut][CODE_COM]  = idem pour Ads Réseaux Sociaux
+//          'AUT' = leads attribués à un commercial hors LEADS_COMS
+const LEADS_YEAR   = 2026;
+const LEADS_COMS   = ['PL', 'CP', 'FD', 'JH', 'ET', 'FMC', 'AV'];
+const LEADS_COM_NAMES = {'PL':'Paul', 'CP':'Charles', 'FD':'Fabian', 'JH':'Julien', 'ET':'Eliott', 'FMC':'Florent', 'AV':'Ayane'};
+const LEADS_STATUTS = [
+    'Prospect non contacté',
+    'Prospect contacté',
+    'En attente de devis',
+    'Sous-Devis',
+    'Patient',
+    'Sous-Garantie',
+    'Perdu',
+    'Désactivé',
+    'Radié',
+];
+const LEADS_DS = {
+    sea: {
+        'Prospect non contacté': {PL:12, CP:17, FD:12, JH:18, ET:3, FMC:14, AV:4, AUT:5},
+        'Prospect contacté': {PL:30, CP:24, FD:9, JH:19, ET:12, FMC:17, AV:4, AUT:11},
+        'En attente de devis': {PL:0, CP:3, FD:0, JH:2, ET:0, FMC:1, AV:1, AUT:0},
+        'Sous-Devis': {PL:9, CP:15, FD:10, JH:10, ET:6, FMC:5, AV:0, AUT:1},
+        'Patient': {PL:0, CP:2, FD:2, JH:1, ET:0, FMC:1, AV:0, AUT:0},
+        'Sous-Garantie': {PL:0, CP:0, FD:0, JH:0, ET:0, FMC:0, AV:0, AUT:0},
+        'Perdu': {PL:10, CP:16, FD:13, JH:12, ET:36, FMC:11, AV:0, AUT:6},
+        'Désactivé': {PL:0, CP:0, FD:1, JH:3, ET:0, FMC:0, AV:0, AUT:0},
+        'Radié': {PL:2, CP:0, FD:0, JH:2, ET:0, FMC:0, AV:0, AUT:0},
+    },
+    rs: {
+        'Prospect non contacté': {PL:1, CP:2, FD:2, JH:1, ET:2, FMC:1, AV:1, AUT:0},
+        'Prospect contacté': {PL:4, CP:2, FD:1, JH:2, ET:3, FMC:1, AV:0, AUT:1},
+        'En attente de devis': {PL:0, CP:1, FD:0, JH:0, ET:0, FMC:0, AV:0, AUT:0},
+        'Sous-Devis': {PL:0, CP:0, FD:1, JH:1, ET:0, FMC:1, AV:0, AUT:0},
+        'Patient': {PL:0, CP:0, FD:0, JH:0, ET:0, FMC:0, AV:0, AUT:0},
+        'Sous-Garantie': {PL:0, CP:0, FD:0, JH:0, ET:0, FMC:0, AV:0, AUT:0},
+        'Perdu': {PL:1, CP:0, FD:0, JH:0, ET:1, FMC:1, AV:0, AUT:0},
+        'Désactivé': {PL:0, CP:0, FD:0, JH:0, ET:0, FMC:0, AV:0, AUT:0},
+        'Radié': {PL:0, CP:0, FD:0, JH:0, ET:0, FMC:0, AV:0, AUT:0},
     },
 };
 // ██ DATA-END ██
@@ -1049,7 +1166,7 @@ render();
 // ══════════════════════════════════════════════════════════════════════════════
 // VUES PAR COMMERCIAL ET COMPARATIF
 // ══════════════════════════════════════════════════════════════════════════════
-const COMM_COLORS = {PL:'#378ADD',CP:'#1D9E75',FD:'#D85A30',JH:'#7F77DD',ET:'#BA7517',FMC:'#D4537E'};
+const COMM_COLORS = {PL:'#378ADD',CP:'#1D9E75',FD:'#D85A30',JH:'#7F77DD',ET:'#BA7517',FMC:'#D4537E',AV:'#5BC4B9'};
 let commBarChart   = null;
 let currentCommCode   = null;
 let currentCommMetric = 'ca';
@@ -1087,10 +1204,230 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
         document.getElementById('view-global').style.display     = view==='global'     ? '' : 'none';
         document.getElementById('view-commercial').style.display = view==='commercial' ? '' : 'none';
         document.getElementById('view-comparatif').style.display = view==='comparatif' ? '' : 'none';
+        document.getElementById('view-leads').style.display      = view==='leads'      ? '' : 'none';
         if (view==='commercial') renderAllCommercials(currentCommCode);
         if (view==='comparatif') renderComparative();
+        if (view==='leads')      renderLeads();
     });
 });
+
+// ── Rendu de la vue "Leads par statut" ──
+let leadsPieSeaChart = null;
+let leadsPieRsChart  = null;
+let leadsPieStatutSeaChart = null;
+let leadsPieStatutRsChart  = null;
+
+// Palette statuts — funnel : froid (en cours) → vert (gagné) → rouge (perdu/sortie)
+const LEADS_STATUT_COLORS = {
+    'Prospect non contacté': '#94a3b8',
+    'Prospect contacté'    : '#378ADD',
+    'En attente de devis'  : '#7F77DD',
+    'Sous-Devis'           : '#BA7517',
+    'Patient'              : '#1D9E75',
+    'Sous-Garantie'        : '#0d7a5a',
+    'Perdu'                : '#D85A30',
+    'Désactivé'            : '#a13a1a',
+    'Radié'                : '#64748b',
+};
+
+function renderLeads() {
+    const moisFr = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+    const today = new Date();
+    const lastMonth = today.getFullYear() === LEADS_YEAR ? today.getMonth() : 11;
+    document.getElementById('leadsPeriodLabel').textContent =
+        `Année ${LEADS_YEAR} (Janvier → ${moisFr[lastMonth]})`;
+
+    document.getElementById('leadsTableSea').innerHTML = buildLeadsTable(LEADS_DS.sea);
+    document.getElementById('leadsTableRs').innerHTML  = buildLeadsTable(LEADS_DS.rs);
+
+    leadsPieSeaChart = buildLeadsPie('leadsPieSea', LEADS_DS.sea, leadsPieSeaChart);
+    leadsPieRsChart  = buildLeadsPie('leadsPieRs',  LEADS_DS.rs,  leadsPieRsChart);
+
+    leadsPieStatutSeaChart = buildLeadsPieStatut('leadsPieStatutSea', LEADS_DS.sea, leadsPieStatutSeaChart);
+    leadsPieStatutRsChart  = buildLeadsPieStatut('leadsPieStatutRs',  LEADS_DS.rs,  leadsPieStatutRsChart);
+}
+
+function leadsTotalsByCom(data) {
+    // Renvoie {PL:n, CP:n, ..., AV:n, AUT:n, _total:N}
+    const t = {};
+    LEADS_COMS.forEach(c => t[c] = 0);
+    t['AUT'] = 0;
+    LEADS_STATUTS.forEach(s => {
+        const r = data[s] || {};
+        LEADS_COMS.forEach(c => t[c] += (r[c] || 0));
+        t['AUT'] += (r['AUT'] || 0);
+    });
+    t._total = LEADS_COMS.reduce((a, c) => a + t[c], 0) + t['AUT'];
+    return t;
+}
+
+function buildLeadsTable(data) {
+    const coms = LEADS_COMS;
+    const totals = leadsTotalsByCom(data);
+    const grandTotal = totals._total || 1;
+
+    // En-tête
+    let h = '<table><thead><tr><th>Statut</th>';
+    coms.forEach(c => h += `<th>${c}</th>`);
+    h += '<th style="opacity:.7">Autres</th><th>Total</th></tr></thead><tbody>';
+
+    // Cellules : % calculé sur le total de la colonne (commercial),
+    // pour répondre à "combien les X perdus de ET représentent sur ses Y leads"
+    LEADS_STATUTS.forEach(statut => {
+        const row = data[statut] || {};
+        let rowT = 0;
+        coms.forEach(c => rowT += (row[c] || 0));
+        rowT += (row['AUT'] || 0);
+        if (rowT === 0) return;
+
+        h += `<tr><td>${statut}</td>`;
+        coms.forEach(c => {
+            const v = row[c] || 0;
+            const colT = totals[c] || 0;
+            const pct = colT > 0 ? (v * 100 / colT).toFixed(1) : 0;
+            const muted = v === 0 ? ' style="color:var(--muted);opacity:.5"' : '';
+            const pctTxt = v === 0 ? '' : ` <span style="color:var(--muted);font-size:.75rem">(${pct}%)</span>`;
+            h += `<td${muted}>${v}${pctTxt}</td>`;
+        });
+        const aut = row['AUT'] || 0;
+        const autColT = totals['AUT'] || 0;
+        const autPct = autColT > 0 ? (aut * 100 / autColT).toFixed(1) : 0;
+        const autMuted = aut === 0 ? ' style="color:var(--muted);opacity:.5"' : ' style="opacity:.7"';
+        const autPctTxt = aut === 0 ? '' : ` <span style="color:var(--muted);font-size:.75rem">(${autPct}%)</span>`;
+        h += `<td${autMuted}>${aut}${autPctTxt}</td>`;
+        // Colonne Total : % sur grand total canal (= part du statut dans le canal)
+        const rowPct = grandTotal ? (rowT * 100 / grandTotal).toFixed(1) : 0;
+        h += `<td><strong>${rowT}</strong> <span style="color:var(--muted);font-size:.75rem">(${rowPct}%)</span></td></tr>`;
+    });
+
+    // Ligne totale : valeurs absolues + part de chaque commercial sur le canal
+    h += `<tr class="total-row"><td>Total</td>`;
+    coms.forEach(c => {
+        const v = totals[c];
+        const pct = grandTotal ? (v * 100 / grandTotal).toFixed(1) : 0;
+        h += `<td>${v} <span style="font-weight:normal;opacity:.8;font-size:.78rem">(${pct}%)</span></td>`;
+    });
+    const autGTPct = grandTotal ? (totals['AUT'] * 100 / grandTotal).toFixed(1) : 0;
+    h += `<td style="opacity:.7">${totals['AUT']} <span style="font-weight:normal;font-size:.78rem">(${autGTPct}%)</span></td>`;
+    h += `<td>${totals._total} (100%)</td></tr>`;
+    h += '</tbody></table>';
+    return h;
+}
+
+function leadsTotalsByStatut(data) {
+    // Renvoie {statut: n, _total: N}, dans l'ordre LEADS_STATUTS
+    const t = {};
+    let total = 0;
+    LEADS_STATUTS.forEach(s => {
+        const r = data[s] || {};
+        let n = 0;
+        LEADS_COMS.forEach(c => n += (r[c] || 0));
+        n += (r['AUT'] || 0);
+        t[s] = n;
+        total += n;
+    });
+    t._total = total;
+    return t;
+}
+
+function buildLeadsPieStatut(canvasId, data, oldChart) {
+    if (oldChart) oldChart.destroy();
+    const totals = leadsTotalsByStatut(data);
+    const statuts = LEADS_STATUTS.filter(s => totals[s] > 0);
+    const labels  = statuts;
+    const values  = statuts.map(s => totals[s]);
+    const colors  = statuts.map(s => LEADS_STATUT_COLORS[s] || '#888');
+    const grandTotal = totals._total || 1;
+    const ctx = document.getElementById(canvasId).getContext('2d');
+    return new Chart(ctx, {
+        type: 'doughnut',
+        plugins: [ChartDataLabels],
+        data: {
+            labels,
+            datasets: [{ data: values, backgroundColor: colors, borderColor: '#0f172a', borderWidth: 2 }],
+        },
+        options: {
+            maintainAspectRatio: false,
+            cutout: '55%',
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: { color: '#e2e8f0', font: { size: 12 }, boxWidth: 14, padding: 10 },
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => {
+                            const v = ctx.parsed;
+                            const pct = (v * 100 / grandTotal).toFixed(1);
+                            return `${ctx.label}: ${v} leads (${pct}%)`;
+                        },
+                    },
+                },
+                datalabels: {
+                    color: '#fff',
+                    font: { weight: 'bold', size: 11 },
+                    formatter: (v) => {
+                        if (!v) return '';
+                        const pct = (v * 100 / grandTotal);
+                        return pct < 4 ? '' : `${pct.toFixed(0)}%`;
+                    },
+                },
+            },
+        },
+    });
+}
+
+function buildLeadsPie(canvasId, data, oldChart) {
+    if (oldChart) oldChart.destroy();
+    const totals = leadsTotalsByCom(data);
+    const coms = LEADS_COMS.slice();
+    const labels = coms.map(c => `${c} — ${LEADS_COM_NAMES[c]}`);
+    const values = coms.map(c => totals[c]);
+    const colors = coms.map(c => COMM_COLORS[c] || '#888');
+    if (totals['AUT'] > 0) {
+        labels.push('Autres (ED, TS, JB…)');
+        values.push(totals['AUT']);
+        colors.push('#64748b');
+    }
+    const grandTotal = totals._total || 1;
+    const ctx = document.getElementById(canvasId).getContext('2d');
+    return new Chart(ctx, {
+        type: 'doughnut',
+        plugins: [ChartDataLabels],
+        data: {
+            labels,
+            datasets: [{ data: values, backgroundColor: colors, borderColor: '#0f172a', borderWidth: 2 }],
+        },
+        options: {
+            maintainAspectRatio: false,
+            cutout: '55%',
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: { color: '#e2e8f0', font: { size: 12 }, boxWidth: 14, padding: 10 },
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => {
+                            const v = ctx.parsed;
+                            const pct = (v * 100 / grandTotal).toFixed(1);
+                            return `${ctx.label}: ${v} leads (${pct}%)`;
+                        },
+                    },
+                },
+                datalabels: {
+                    color: '#fff',
+                    font: { weight: 'bold', size: 11 },
+                    formatter: (v) => {
+                        if (!v) return '';
+                        const pct = (v * 100 / grandTotal);
+                        return pct < 4 ? '' : `${pct.toFixed(0)}%`;
+                    },
+                },
+            },
+        },
+    });
+}
 
 // ── Rendu de la vue "Par commercial" ──
 function renderAllCommercials(filterCode) {
